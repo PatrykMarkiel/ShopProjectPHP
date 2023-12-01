@@ -1,0 +1,14 @@
+INSERT INTO Products (Name, Description, Category, Production_year, Country, Price, `Condition`, Product_Link, Company, Availability, Listing_date)
+VALUES
+    ('Leopard 2A4', 'Main battle tank', 'Tank', 2027, 'Germany', 10500000.00, 'New', 'Leopard2A4.jpg', 'Krauss-Maffei Wegmann', 4, '2023-11-30'),
+    ('Leopard 2A5', 'Main battle tank', 'Tank', 2028, 'Germany', 11000000.00, 'New', 'Leopard2A5.jpg', 'Krauss-Maffei Wegmann', 2, '2023-11-30'),
+    ('Leopard 2A6', 'Main battle tank', 'Tank', 2029, 'Germany', 11500000.00, 'New', 'Leopard2A6.jpg', 'Krauss-Maffei Wegmann', 9, '2023-11-30'),
+    ('Leopard 2A7', 'Main battle tank', 'Tank', 2030, 'Germany', 12000000.00, 'New', 'Leopard2A7.jpg', 'Krauss-Maffei Wegmann', 10, '2023-11-30'),
+    ('Leopard 2PL', 'Main battle tank', 'Tank', 2023, 'Poland', 8900000.00, 'New', 'Leopard2PL.jpg', 'Krauss-Maffei Wegmann', 8, '2023-11-30'),
+    ('Challenger 2', 'Main battle tank', 'Tank', 2021, 'UK', 8000000.00, 'New', 'Challanger2.jpg', 'BAE Systems', 12, '2023-11-30'),
+    ('K2 Black Panther', 'Main battle tank', 'Tank', 2022, 'SouthKorea', 8700000.00, 'New', 'K2.jpg', 'Hyundai Rotem', 9, '2023-11-30'),
+    ('Abrams M1A2 Sepv3', 'Main battle tank', 'Tank', 2023, 'USA', 9300000.00, 'New', 'AbramsM1A2SepV3.jpg', 'General Dynamics Land Systems', 15, '2023-11-30'),
+    ('Leclerc 2', 'Main battle tank', 'Tank', 2023, 'France', 8800000.00, 'New', 'Leclerc2.jpg', 'Nexter', 7, '2023-11-30'),
+    ('Altay', 'Main battle tank', 'Tank', 2024, 'Turkey', 9200000.00, 'New', 'Altay.jpg', 'Otokar', 5, '2023-11-30'),
+    ('Type 99A', 'Main battle tank', 'Tank', 2020, 'China', 8200000.00, 'New', 'Type99A.jpg', 'Norinco', 14, '2023-11-30'),
+    ('Type 10', 'Main battle tank', 'Tank', 2021, 'Japan', 8900000.00, 'New', 'Type10.jpg', 'Mitsubishi Heavy Industries', 11, '2023-11-30');

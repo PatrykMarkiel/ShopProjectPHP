@@ -1,0 +1,59 @@
+DROP DATABASE IF EXISTS shop;
+CREATE DATABASE shop;
+USE shop;
+
+-- Table "Users"
+CREATE TABLE Users (
+   ID INT AUTO_INCREMENT PRIMARY KEY,
+   First_name VARCHAR(50),
+   Last_name VARCHAR(50),
+   Email_address VARCHAR(100),
+   Password VARCHAR(255),
+   Shipping_address VARCHAR(255),
+   Link VARCHAR(255),
+   Phone_number VARCHAR(20),
+   Registration_date DATE
+);
+
+-- Table "Cart"
+CREATE TABLE Cart (
+   ID INT AUTO_INCREMENT PRIMARY KEY,
+   User_ID INT,
+   Creation_date DATE,
+   FOREIGN KEY (User_ID) REFERENCES Users(ID)
+);
+
+CREATE TABLE Products (
+   ID INT AUTO_INCREMENT PRIMARY KEY,
+   Name VARCHAR(100),
+   Description TEXT,
+   Category VARCHAR(50),
+   Production_year INT,
+   Country VARCHAR(50),
+   Price DECIMAL(10, 2),
+   `Condition` VARCHAR(20), -- Using backticks to escape the reserved keyword
+   Product_Link VARCHAR(255), -- Renaming 'Link' column to 'Product_Link' due to potential conflicts
+   Company VARCHAR(255),
+   Availability INT,
+   Listing_date DATE
+);
+-- Table "Orders"
+CREATE TABLE Orders (
+   ID INT AUTO_INCREMENT PRIMARY KEY,
+   User_ID INT,
+   Order_date DATE,
+   Order_status VARCHAR(50),
+   Shipping_address VARCHAR(255),
+   FOREIGN KEY (User_ID) REFERENCES Users(ID)
+);
+
+-- Table "Order_Details"
+CREATE TABLE Order_Details (
+   ID INT AUTO_INCREMENT PRIMARY KEY,
+   Order_ID INT,
+   Product_ID INT,
+   Quantity INT,
+   Unit_price DECIMAL(10, 2),
+   FOREIGN KEY (Order_ID) REFERENCES Orders(ID),
+   FOREIGN KEY (Product_ID) REFERENCES Products(ID)
+);
