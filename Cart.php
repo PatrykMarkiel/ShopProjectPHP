@@ -141,13 +141,21 @@ if (isset($_GET['remove_from_cart'])) {
 
                         echo '
                         <tr>
-                            <td><b>Total Price:</b></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>$' . number_format($totalPrice, 2) . '</td>
-                            <td></td>
-                        </tr>';
+                        <td><b>Total Price:</b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>$' . number_format($totalPrice, 2) . '</td>
+                        <td></td>
+                    </tr>';
+                    echo '       
+                    <td colspan="5"></td>
+                    <td>
+                        <form action="confirm_purchase.php" method="post">
+                            <input type="submit" class="btn btn-success" value="Confirm Purchase">
+                        </form>
+                    </td>
+                    ';
                     } else {
                         echo '<tr><td colspan="6">No items in the cart</td></tr>';
                     }
