@@ -87,7 +87,7 @@
                     <h3 class="fw-bold"><?php echo htmlspecialchars($productDetails['Name']); ?></h3>
                     <span class="lead mb-4">Description: <?php echo htmlspecialchars($productDetails['Description']); ?></span>
                     <br>
-                    <span class="lead mb-4">Price: $<?php echo number_format($productDetails['Price'], 2); ?></span>
+                    <span class="lead mb-4">Price: <?php echo number_format($productDetails['Price'], 2); ?>$</span>
                     <br>
                     <span class="lead mb-4">Year of production: <?php echo intval($productDetails['Production_year']); ?></span>
                     <br>

@@ -87,20 +87,21 @@ if (isset($_GET['remove_from_cart'])) {
 <br>
 <!-- Content -->
 <div class="container my-5 rounded bg-secondary" style="padding: 20px;">
-<div class="row">
+    <div class="row">
+        <!-- ... -->
         <div class="col">
             <h1><b>Cart</b></h1>
         </div>
         <div class="col d-flex justify-content-end">
-            <a href="Main.php" class="btn btn-primary " style="height:40px;" >Go back</a>
+            <a href="Main.php" class="btn btn-primary" style="height: 40px;">Go back</a>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Name</th>
+                    <tr >
+                        <th >Name</th>
                         <th>Quantity</th>
                         <th>Condition</th>
                         <th>Unit Price</th>
@@ -113,15 +114,22 @@ if (isset($_GET['remove_from_cart'])) {
                     if (!empty($_SESSION['cart'])) {
                         $totalPrice = 0;
                         foreach ($_SESSION['cart'] as $item) {
-                            $stmt = $mysqli->prepare("SELECT Name, Price FROM Products WHERE ID = ?");
+                            $stmt = $mysqli->prepare("SELECT Name, Price, `Condition`, Country FROM Products WHERE ID = ?");
                             $stmt->bind_param("i", $item['ID']);
                             $stmt->execute();
                             $result = $stmt->get_result();
                             $productDetails = $result->fetch_assoc();
 
                             echo '<tr>';
-                            echo '<td>' . $productDetails['Name'] . '</td>';
+                            echo '<td>';
+                            $countryFlagPath = 'Flags/' . $productDetails['Country'] . '.jpg';
+                            if (file_exists($countryFlagPath)) {
+                                echo '<img class="flag-icon" src="' . $countryFlagPath . '" alt="' . $productDetails['Country'] . '" style="margin-left: 5px;">';
+                            }
+                            echo $productDetails['Name'];
+                            echo '</td>';
                             echo '<td style="padding-left: 25px;">' . (isset($item['Availability']) ? $item['Availability'] : 0) . '</td>';
+                            echo '<td>' . $productDetails['Condition'] . '</td>';
                             echo '<td>' . number_format($productDetails['Price'], 2) . '$</td>';
                             $totalItemPrice = (isset($item['Availability']) ? $productDetails['Price'] * $item['Availability'] : 0);
                             echo '<td>' . number_format($totalItemPrice, 2) . '$</td>';
@@ -136,11 +144,12 @@ if (isset($_GET['remove_from_cart'])) {
                             <td><b>Total Price:</b></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td>$' . number_format($totalPrice, 2) . '</td>
                             <td></td>
                         </tr>';
                     } else {
-                        echo '<tr><td colspan="5">No items in the cart</td></tr>';
+                        echo '<tr><td colspan="6">No items in the cart</td></tr>';
                     }
                     ?>
                 </tbody>
