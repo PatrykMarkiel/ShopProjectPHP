@@ -22,6 +22,23 @@
       font-size: 20px;
       color: #333;
     }
+    body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('Photos/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
   </style>
 </head>
 <body style="overflow-y: auto; overflow-x: hidden;">
@@ -30,16 +47,17 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container">
     <a class="navbar-brand" href="#">
-      <img src="Icons/icon.png" alt="Link 2" class="d-inline-block align-text-top me-2" id="brand" style="max-height: 25px;">
+      <img src="Icons/icon.png" alt="Link 2" class="d-inline-block align-text-top me-2" ID="brand" style="max-height: 25px;">
       <b>Warland</b>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <div class="collapse navbar-collapse justify-content-end" ID="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link" href="#"></a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><b>cart</b></a></li>
+        <li class="nav-item"><a class="nav-link" href="Main.php"><b>Main page</b></a></li>
+        <li class="nav-item"><a class="nav-link" href="Cart.php"><b>cart</b></a></li>
         <li class="nav-item"><a class="nav-link" href="#"><b>profile</b></a></li>
         <li class="nav-item"><a class="nav-link" href="#"><b>settings</b></a></li>
       </ul>
@@ -90,9 +108,9 @@
                     echo '<img class="flag-icon" src="' . $countryFlagPath . '" alt="' . $product['Country'] . '">';
                 }
 
-                echo '<p class="card-text">Price: ' . $product['Price'] . '$</p>';
+                echo '<p class="card-text">Price: ' . intval($product['Price']) . '$</p>';
                 echo '<input type="hidden" name="productId" value="' . $product['ID'] . '">';
-                echo '<a href="Cart.php?id=' . $product['ID'] . '"><button type="button" class="btn btn-primary mx-1">Add to Cart</button></a>';
+                echo '<a href="Product.php?ID=' . $product['ID'] . '"><button type="button" class="btn btn-primary mx-1">Add to Cart</button></a>';
                 echo '<button class="btn btn-success mx-1">Buy Now</button>';
 
                 echo '</div></div></div>';
@@ -111,18 +129,18 @@
       <form action="Main.php" method="post">
         <div class="mb-3">
           <label for="search" class="form-label">Search</label>
-          <input type="text" class="form-control" name="search" id="search" placeholder="Search for a vehicle...">
+          <input type="text" class="form-control" name="search" ID="search" placeholder="Search for a vehicle...">
         </div>
         <div class="mb-3">
           <label for="sort" class="form-label">Sort by</label>
-          <select class="form-select" name="sort" id="sort">
+          <select class="form-select" name="sort" ID="sort">
             <option value="asc">Lowest Price</option>
             <option value="desc">Highest Price</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="country" class="form-label">Filter by Country</label>
-          <select class="form-select" name="country" id="country">
+          <select class="form-select" name="country" ID="country">
             <option value="">Select a country</option>
             <?php
             include "conn.php";
