@@ -1,10 +1,12 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(); // Rozpoczęcie sesji, jeśli nie została jeszcze zainicjowana
+}
+
 include "Conn.php";
 
-if (isset($_COOKIE['cart']) && is_array(json_decode($_COOKIE['cart'], true))) {
-    $cartItems = json_decode($_COOKIE['cart'], true);
-} else {
-    $cartItems = [];
+if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
 }
 
 if (isset($_GET['add_to_cart']) && isset($_GET['quantity'])) {
@@ -19,7 +21,7 @@ if (isset($_GET['add_to_cart']) && isset($_GET['quantity'])) {
 
     $productFound = false;
 
-    foreach ($cartItems as &$item) {
+    foreach ($_SESSION['cart'] as &$item) {
         if (isset($item['ID']) && $item['ID'] === $productID) {
             $item['Availability'] += $quantity;
             $productFound = true;
@@ -28,27 +30,31 @@ if (isset($_GET['add_to_cart']) && isset($_GET['quantity'])) {
     }
 
     if (!$productFound) {
-        $cartItems[] = array('ID' => $productID, 'Availability' => $quantity);
+        $_SESSION['cart'][] = array('ID' => $productID, 'Availability' => $quantity);
     }
 
-    setcookie('cart', json_encode($cartItems), time() + 3600, "/");
+    // Przekierowanie na stronę koszyka po dodaniu produktu
+    header("Location: Cart.php");
+    exit();
 }
 
 if (isset($_GET['remove_from_cart'])) {
     $productID = $_GET['remove_from_cart'];
 
-    foreach ($cartItems as $key => $item) {
+    foreach ($_SESSION['cart'] as $key => $item) {
         if ($item['ID'] === $productID) {
-            unset($cartItems[$key]);
+            unset($_SESSION['cart'][$key]);
             break;
         }
     }
 
-    $cartItems = array_values($cartItems);
-
-    setcookie('cart', json_encode($cartItems), time() + 3600, "/");
+    // Przekierowanie na stronę koszyka po usunięciu produktu
+    header("Location: Cart.php");
+    exit();
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,15 +97,14 @@ if (isset($_GET['remove_from_cart'])) {
                         <th>Quantity</th>
                         <th>Unit Price</th>
                         <th>Total Price</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    if (!empty($cartItems)) {
+                    if (!empty($_SESSION['cart'])) {
                         $totalPrice = 0;
-                        // Pętla wyświetlająca produkty w koszyku
-                        foreach ($cartItems as $item) {
-                            // Pobranie szczegółów produktu z bazy danych na podstawie $item['ID']
+                        foreach ($_SESSION['cart'] as $item) {
                             $stmt = $mysqli->prepare("SELECT Name, Price FROM Products WHERE ID = ?");
                             $stmt->bind_param("i", $item['ID']);
                             $stmt->execute();
@@ -108,23 +113,26 @@ if (isset($_GET['remove_from_cart'])) {
 
                             echo '<tr>';
                             echo '<td>' . $productDetails['Name'] . '</td>';
-                            echo '<td>' . (isset($item['Availability']) ? $item['Availability'] : 0) . '</td>';
+                            echo '<td style="padding-left: 25px;">' . (isset($item['Availability']) ? $item['Availability'] : 0) . '</td>';
                             echo '<td>$' . number_format($productDetails['Price'], 2) . '</td>';
                             $totalItemPrice = (isset($item['Availability']) ? $productDetails['Price'] * $item['Availability'] : 0);
                             echo '<td>$' . number_format($totalItemPrice, 2) . '</td>';
+                            echo '<td><a href="Cart.php?remove_from_cart=' . $item['ID'] . '"><img src="Icons/Remove.jpg" alt="Remove" width="20" height="20" style="margin-left: 15px;"></a></td>';
                             echo '</tr>';
 
                             $totalPrice += $totalItemPrice;
                         }
+
                         echo '
                         <tr>
                             <td><b>Total Price:</b></td>
                             <td></td>
                             <td></td>
                             <td>$' . number_format($totalPrice, 2) . '</td>
+                            <td></td>
                         </tr>';
                     } else {
-                        echo '<tr><td colspan="4">No items in the cart</td></tr>';
+                        echo '<tr><td colspan="5">No items in the cart</td></tr>';
                     }
                     ?>
                 </tbody>
@@ -132,6 +140,10 @@ if (isset($_GET['remove_from_cart'])) {
         </div>
     </div>
 </div>
+<!-- ... (reszta kodu HTML) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 <style>
     .card-img-top {
       height: 300px; 
@@ -167,6 +179,4 @@ if (isset($_GET['remove_from_cart'])) {
             width: 100%;
             height: 100%;
         }
-  </style>
-</body>
-</html>
+</style>
