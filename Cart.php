@@ -87,7 +87,14 @@ if (isset($_GET['remove_from_cart'])) {
 <br>
 <!-- Content -->
 <div class="container my-5 rounded bg-secondary" style="padding: 20px;">
-    <h1>Cart</h1>
+<div class="row">
+        <div class="col">
+            <h1><b>Cart</b></h1>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <a href="Main.php" class="btn btn-primary " style="height:40px;" >Go back</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <table class="table">
@@ -95,9 +102,10 @@ if (isset($_GET['remove_from_cart'])) {
                     <tr>
                         <th>Name</th>
                         <th>Quantity</th>
+                        <th>Condition</th>
                         <th>Unit Price</th>
                         <th>Total Price</th>
-                        <th>Action</th>
+                        <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -114,9 +122,9 @@ if (isset($_GET['remove_from_cart'])) {
                             echo '<tr>';
                             echo '<td>' . $productDetails['Name'] . '</td>';
                             echo '<td style="padding-left: 25px;">' . (isset($item['Availability']) ? $item['Availability'] : 0) . '</td>';
-                            echo '<td>$' . number_format($productDetails['Price'], 2) . '</td>';
+                            echo '<td>' . number_format($productDetails['Price'], 2) . '$</td>';
                             $totalItemPrice = (isset($item['Availability']) ? $productDetails['Price'] * $item['Availability'] : 0);
-                            echo '<td>$' . number_format($totalItemPrice, 2) . '</td>';
+                            echo '<td>' . number_format($totalItemPrice, 2) . '$</td>';
                             echo '<td><a href="Cart.php?remove_from_cart=' . $item['ID'] . '"><img src="Icons/Remove.jpg" alt="Remove" width="20" height="20" style="margin-left: 15px;"></a></td>';
                             echo '</tr>';
 

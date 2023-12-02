@@ -67,8 +67,16 @@
     ?>
 
     <div class="container my-5 rounded bg-secondary" style="padding: 20px;">
+    
         <div class="row align-items-center">
-            <h1 class="mb-4"><b><?php echo htmlspecialchars($productDetails['Name']); ?></b></h1>
+        <div class="row">
+        <div class="col">
+        <h1 class="mb-4"><b><?php echo htmlspecialchars($productDetails['Name']); ?></b></h1>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <a href="Main.php" class="btn btn-primary " style="height:40px;" >Go back</a>
+        </div>
+    </div>
             <div class="col-md-6">
                 <div class="position-relative">
                     <img src="Photos/<?php echo htmlspecialchars($productDetails['Product_Link']); ?>" class="product-img img-fluid rounded" alt="<?php echo htmlspecialchars($productDetails['Name']); ?>">
