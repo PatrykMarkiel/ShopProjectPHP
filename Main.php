@@ -142,8 +142,8 @@
         $sort = $_POST['sort'] ?? '';
         $country = $_POST['country'] ?? '';
         $category = $_POST['category'] ?? '';
-        $price_min = $_POST['price_min'] ?? '';
-        $price_max = $_POST['price_max'] ?? '';
+        $price_min = !empty($_POST['price_min']) ? (float)$_POST['price_min'] : null;
+        $price_max = !empty($_POST['price_max']) ? (float)$_POST['price_max'] : null;
 
         $sql = "SELECT * FROM Products WHERE 1=1";
 
@@ -156,7 +156,11 @@
         if (!empty($category)) {
           $sql .= " AND Category = '$category'";
         }
-        if (!empty($price_min) && !empty($price_max)) {
+        if (!empty($price_min) && empty($price_max)) {
+          $sql .= " AND Price >= $price_min";
+        } elseif (empty($price_min) && !empty($price_max)) {
+          $sql .= " AND Price <= $price_max";
+        } elseif (!empty($price_min) && !empty($price_max)) {
           $sql .= " AND Price BETWEEN $price_min AND $price_max";
         }
 
@@ -168,7 +172,6 @@
           $result = $mysqli->query($sql);
 
           while ($product = $result->fetch_assoc()) {
-            // Wyświetlanie produktów
             echo '<div class="col-md-6 mb-4">';
             echo '<div class="card custom-card">';
             echo '<img src="Photos/' . $product['Product_Link'] . '" class="card-img-top img-fluid" alt="' . $product['Name'] . '">';
