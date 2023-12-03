@@ -65,6 +65,71 @@
   </div>
 </nav>
 
+<!-- Sidebar -->
+<div class="col-md-4 position-fixed top-5 end-0">
+  <div style="background-color: #f8f9fa; padding: 20px; border: 2px solid #000; border-radius: 10px; margin: 40px; overflow-y: auto;">
+    <h2 class="mb-4">Sidebar</h2>
+    <form action="Main.php" method="post">
+      <div class="mb-3">
+        <label for="search" class="form-label">Search</label>
+        <input type="text" class="form-control" name="search" id="search" placeholder="Search for a vehicle...">
+      </div>
+      <div class="mb-3">
+        <label for="sort" class="form-label">Sort by</label>
+        <select class="form-select" name="sort" id="sort">
+          <option value="asc">Lowest Price</option>
+          <option value="desc">Highest Price</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="country" class="form-label">Filter by Country</label>
+        <select class="form-select" name="country" id="country">
+          <option value="">Select a country</option>
+          <?php
+          include "conn.php";
+
+          try {
+            $result = $mysqli->query("SELECT DISTINCT Country FROM Products");
+
+            while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['Country'] . '">' . $row['Country'] . '</option>';
+            }
+          } catch (Exception $e) {
+            echo "Query failed: " . $e->getMessage();
+          }
+          ?>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="category" class="form-label">Filter by Category</label>
+        <select class="form-select" name="category" id="category">
+          <option value="">Select a category</option>
+          <?php
+          try {
+            $result = $mysqli->query("SELECT DISTINCT Category FROM Products");
+
+            while ($row = $result->fetch_assoc()) {
+              echo '<option value="' . $row['Category'] . '">' . $row['Category'] . '</option>';
+            }
+          } catch (Exception $e) {
+            echo "Query failed: " . $e->getMessage();
+          }
+          ?>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="price_min" class="form-label">Minimum Price</label>
+        <input type="text" class="form-control" name="price_min" id="price_min" placeholder="Enter minimum price">
+      </div>
+      <div class="mb-3">
+        <label for="price_max" class="form-label">Maximum Price</label>
+        <input type="text" class="form-control" name="price_max" id="price_max" placeholder="Enter maximum price">
+      </div>
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+  </div>
+</div>
+
 <!-- Main Content -->
 <div class="container mt-5">
   <div class="row">
@@ -76,93 +141,65 @@
         $search = $_POST['search'] ?? '';
         $sort = $_POST['sort'] ?? '';
         $country = $_POST['country'] ?? '';
+        $category = $_POST['category'] ?? '';
+        $price_min = $_POST['price_min'] ?? '';
+        $price_max = $_POST['price_max'] ?? '';
 
-        $filter = [];
+        $sql = "SELECT * FROM Products WHERE 1=1";
+
         if (!empty($search)) {
-            $filter[] = "Name LIKE '%$search%'";
+          $sql .= " AND Name LIKE '%$search%'";
         }
         if (!empty($country)) {
-            $filter[] = "Country = '$country'";
+          $sql .= " AND Country = '$country'";
+        }
+        if (!empty($category)) {
+          $sql .= " AND Category = '$category'";
+        }
+        if (!empty($price_min) && !empty($price_max)) {
+          $sql .= " AND Price BETWEEN $price_min AND $price_max";
         }
 
-        $sql = "SELECT * FROM Products";
-        if (!empty($filter)) {
-            $sql .= " WHERE " . implode(' AND ', $filter);
-        }
         if (!empty($sort)) {
-            $sql .= " ORDER BY Price $sort";
+          $sql .= " ORDER BY Price $sort";
         }
 
         try {
-            $result = $mysqli->query($sql);
+          $result = $mysqli->query($sql);
 
-            while ($product = $result->fetch_assoc()) {
-                echo '<div class="col-md-6 mb-4">';
-                echo '<div class="card custom-card">';
-                echo '<img src="Photos/' . $product['Product_Link'] . '" class="card-img-top img-fluid" alt="' . $product['Name'] . '">';
-                echo '<div class="card-body">';
-                echo '<b class="card-title">' . $product['Name'] . ' </b>';
+          while ($product = $result->fetch_assoc()) {
+            // Wyświetlanie produktów
+            echo '<div class="col-md-6 mb-4">';
+            echo '<div class="card custom-card">';
+            echo '<img src="Photos/' . $product['Product_Link'] . '" class="card-img-top img-fluid" alt="' . $product['Name'] . '">';
+            echo '<div class="card-body">';
+            echo '<b class="card-title">' . $product['Name'] . ' </b>';
 
-                $countryFlagPath = 'Flags/' . $product['Country'] . '.jpg'; 
-                if (file_exists($countryFlagPath)) {
-                    echo '<img class="flag-icon" src="' . $countryFlagPath . '" alt="' . $product['Country'] . '">';
-                }
-
-                echo '<p class="card-text">Price: ' . intval($product['Price']) . '$</p>';
-                echo '<input type="hidden" name="productId" value="' . $product['ID'] . '">';
-                echo '<a href="Product.php?ID=' . $product['ID'] . '"><button type="button" class="btn btn-primary mx-1">Add to Cart</button></a>';
-                echo '<button class="btn btn-success mx-1">Buy Now</button>';
-
-                echo '</div></div></div>';
+            $countryFlagPath = 'Flags/' . $product['Country'] . '.jpg';
+            if (file_exists($countryFlagPath)) {
+              echo '<img class="flag-icon" src="' . $countryFlagPath . '" alt="' . $product['Country'] . '">';
             }
+
+            echo '<p class="card-text">Price: ' . intval($product['Price']) . '$</p>';
+            echo '<input type="hidden" name="productId" value="' . $product['ID'] . '">';
+            echo '<a href="Product.php?ID=' . $product['ID'] . '"><button type="button" class="btn btn-primary mx-1">Add to Cart</button></a>';
+            echo '<button class="btn btn-success mx-1">Buy Now</button>';
+
+            echo '</div></div></div>';
+          }
         } catch (Exception $e) {
-            echo "Query failed: " . $e->getMessage();
+          echo "Query failed: " . $e->getMessage();
         }
         ?>
       </div>
     </div>
-
-  <!-- Sidebar -->
-  <div class="col-md-4 position-fixed top-5 end-0">
-    <div style="background-color: #f8f9fa; padding: 20px; height: 420px; border: 2px solid #000; border-radius: 10px; margin:40px; overflow-y: auto;">
-      <h2 class="mb-4">Sidebar</h2>
-      <form action="Main.php" method="post">
-        <div class="mb-3">
-          <label for="search" class="form-label">Search</label>
-          <input type="text" class="form-control" name="search" ID="search" placeholder="Search for a vehicle...">
-        </div>
-        <div class="mb-3">
-          <label for="sort" class="form-label">Sort by</label>
-          <select class="form-select" name="sort" ID="sort">
-            <option value="asc">Lowest Price</option>
-            <option value="desc">Highest Price</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="country" class="form-label">Filter by Country</label>
-          <select class="form-select" name="country" ID="country">
-            <option value="">Select a country</option>
-            <?php
-            include "conn.php";
-
-            try {
-              $result = $mysqli->query("SELECT DISTINCT Country FROM Products");
-
-              while ($row = $result->fetch_assoc()) {
-                echo '<option value="' . $row['Country'] . '">' . $row['Country'] . '</option>';
-              }
-            } catch (Exception $e) {
-              echo "Query failed: " . $e->getMessage();
-            }
-            ?>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Filter</button>
-      </form>
-    </div>
-  </div>
   </div>
 </div>
+
+
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
