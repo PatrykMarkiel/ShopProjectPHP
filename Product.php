@@ -55,8 +55,6 @@
 
     if (isset($_GET['ID']) && is_numeric($_GET['ID'])) {
         $productID = $_GET['ID'];
-
-        // Pobierz informacje o produkcie na podstawie ID (używając prepared statements, aby zabezpieczyć zapytanie)
         $stmt = $mysqli->prepare("SELECT * FROM Products WHERE ID = ?");
         $stmt->bind_param("i", $productID);
         $stmt->execute();
@@ -142,7 +140,7 @@
             $cartItems[] = array('ID' => $productID, 'Quantity' => $quantity);
         }
 
-        setcookie('cart', json_encode($cartItems), time() + 3600, "/");
+        setcookie('cart', json_encode($cartItems), time() + 900, "/");
     }
     ?>
 
