@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,10 +126,29 @@
         <label for="price_max" class="form-label">Maximum Price</label>
         <input type="text" class="form-control" name="price_max" id="price_max" placeholder="Enter maximum price">
       </div>
+        <div class="mb-3">
+        <label for="start_year" class="form-label">Start Year</label>
+        <input type="number" class="form-control" name="start_year" id="start_year" placeholder="Enter start year">
+      </div>
+      <div class="mb-3">
+        <label for="end_year" class="form-label">End Year</label>
+        <input type="number" class="form-control" name="end_year" id="end_year" placeholder="Enter end year">
+      </div>
+
+      <!-- Sortowanie wg daty -->
+      <div class="mb-3">
+        <label for="sort_date" class="form-label">Sort by Date</label>
+        <select class="form-select" name="sort_date" id="sort_date">
+          <option value="asc">Oldest First</option>
+          <option value="desc">Newest First</option>
+        </select>
+      </div>
+
       <button type="submit" class="btn btn-primary">Filter</button>
     </form>
   </div>
 </div>
+
 
 <!-- Main Content -->
 <div class="container mt-5">
@@ -144,6 +164,9 @@
         $category = $_POST['category'] ?? '';
         $price_min = !empty($_POST['price_min']) ? (float)$_POST['price_min'] : null;
         $price_max = !empty($_POST['price_max']) ? (float)$_POST['price_max'] : null;
+        $start_year = $_POST['start_year'] ?? '';
+        $end_year = $_POST['end_year'] ?? '';
+        $sort_date = $_POST['sort_date'] ?? '';
 
         $sql = "SELECT * FROM Products WHERE 1=1";
 
@@ -163,9 +186,18 @@
         } elseif (!empty($price_min) && !empty($price_max)) {
           $sql .= " AND Price BETWEEN $price_min AND $price_max";
         }
+        if (!empty($start_year) && !empty($end_year)) {
+          $sql .= " AND Production_year BETWEEN $start_year AND $end_year";
+        }
 
-        if (!empty($sort)) {
-          $sql .= " ORDER BY Price $sort";
+        if (!empty($sort) && $sort_date === 'asc') {
+          $sql .= " ORDER BY Production_year ASC";
+        } elseif (!empty($sort) && $sort_date === 'desc') {
+          $sql .= " ORDER BY Production_year DESC";
+        } else {
+          if (!empty($sort)) {
+            $sql .= " ORDER BY Price $sort";
+          }
         }
 
         try {
@@ -180,10 +212,11 @@
 
             $countryFlagPath = 'Flags/' . $product['Country'] . '.jpg';
             if (file_exists($countryFlagPath)) {
-              echo '<img class="flag-icon" src="' . $countryFlagPath . '" alt="' . $product['Country'] . '">';
+              echo '<img class="flag-icon" src="' . $countryFlagPath . '" alt="' . $product['Country'] . '"><br>';
             }
 
-            echo '<p class="card-text">Price: ' . intval($product['Price']) . '$</p>';
+            echo '<b class="card-text">Price: ' . intval($product['Price']) . '$</b><br>';
+            echo '<b class="card-text">Production year: ' . intval($product['Production_year']) . '</b><br>';
             echo '<input type="hidden" name="productId" value="' . $product['ID'] . '">';
             echo '<a href="Product.php?ID=' . $product['ID'] . '"><button type="button" class="btn btn-primary mx-1">Add to Cart</button></a>';
             echo '<button class="btn btn-success mx-1">Buy Now</button>';
@@ -200,8 +233,9 @@
 </div>
 
 
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
