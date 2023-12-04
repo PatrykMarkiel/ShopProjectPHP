@@ -93,7 +93,10 @@
             $result = $mysqli->query("SELECT DISTINCT Country FROM Products");
 
             while ($row = $result->fetch_assoc()) {
-              echo '<option value="' . $row['Country'] . '">' . $row['Country'] . '</option>';
+              $countryFlagPath = 'Flags/' . $row['Country'] . '.jpg'; 
+              echo '<option value="' . $row['Country'] . '">';
+              echo $row['Country'];
+              echo '</option>';
             }
           } catch (Exception $e) {
             echo "Query failed: " . $e->getMessage();
@@ -102,7 +105,7 @@
         </select>
       </div>
       <div class="mb-3">
-        <label for="category" class="form-label">Filter by Category</label>
+        <label for="category" class="form-label">Filter by vehicle category</label>
         <select class="form-select" name="category" id="category">
           <option value="">Select a category</option>
           <?php
@@ -119,23 +122,25 @@
         </select>
       </div>
       <div class="mb-3">
-        <label for="price_min" class="form-label">Minimum Price</label>
-        <input type="text" class="form-control" name="price_min" id="price_min" placeholder="Enter minimum price">
+        <label for="price_range" class="form-label">Price Range</label>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <input type="number" class="form-control" name="price_min" id="price_min" placeholder="Enter minimum price">
+          </div>
+          <div class="col-md-6">
+            <input type="number" class="form-control" name="price_max" id="price_max" placeholder="Enter maximum price">
+          </div>
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="price_max" class="form-label">Maximum Price</label>
-        <input type="text" class="form-control" name="price_max" id="price_max" placeholder="Enter maximum price">
+      <div class="row g-2">
+        <label class="form-label">Production year</label>
+        <div class="col-md-6 mb-3">
+          <input type="number" class="form-control" name="start_year" id="start_year" placeholder="Enter start year">
+        </div>
+        <div class="col-md-6 mb-3">
+          <input type="number" class="form-control" name="end_year" id="end_year" placeholder="Enter end year">
+        </div>
       </div>
-        <div class="mb-3">
-        <label for="start_year" class="form-label">Start Year</label>
-        <input type="number" class="form-control" name="start_year" id="start_year" placeholder="Enter start year">
-      </div>
-      <div class="mb-3">
-        <label for="end_year" class="form-label">End Year</label>
-        <input type="number" class="form-control" name="end_year" id="end_year" placeholder="Enter end year">
-      </div>
-
-      <!-- Sortowanie wg daty -->
       <div class="mb-3">
         <label for="sort_date" class="form-label">Sort by Date</label>
         <select class="form-select" name="sort_date" id="sort_date">
@@ -143,7 +148,6 @@
           <option value="desc">Newest First</option>
         </select>
       </div>
-
       <button type="submit" class="btn btn-primary">Filter</button>
     </form>
   </div>
