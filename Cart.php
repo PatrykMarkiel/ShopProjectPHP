@@ -1,6 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start(); // Rozpoczęcie sesji, jeśli nie została jeszcze zainicjowana
+    session_start(); 
 }
 
 include "Conn.php";
@@ -13,7 +13,6 @@ if (isset($_GET['add_to_cart']) && isset($_GET['quantity'])) {
     $productID = $_GET['add_to_cart'];
     $quantity = $_GET['quantity'];
 
-    // Sprawdzenie czy ilość jest liczbą dodatnią
     if (!is_numeric($quantity) || $quantity <= 0) {
         echo "Invalid quantity.";
         exit;
@@ -33,7 +32,6 @@ if (isset($_GET['add_to_cart']) && isset($_GET['quantity'])) {
         $_SESSION['cart'][] = array('ID' => $productID, 'Availability' => $quantity);
     }
 
-    // Przekierowanie na stronę koszyka po dodaniu produktu
     header("Location: Cart.php");
     exit();
 }
@@ -48,7 +46,6 @@ if (isset($_GET['remove_from_cart'])) {
         }
     }
 
-    // Przekierowanie na stronę koszyka po usunięciu produktu
     header("Location: Cart.php");
     exit();
 }
@@ -88,7 +85,6 @@ if (isset($_GET['remove_from_cart'])) {
 <!-- Content -->
 <div class="container my-5 rounded bg-secondary" style="padding: 20px;">
     <div class="row">
-        <!-- ... -->
         <div class="col">
             <h1><b>Cart</b></h1>
         </div>
@@ -106,6 +102,7 @@ if (isset($_GET['remove_from_cart'])) {
                         <th>Condition</th>
                         <th>Unit Price</th>
                         <th>Total Price</th>
+                        <th>Production Year</th>
                         <th>Remove</th>
                     </tr>
                 </thead>
@@ -114,7 +111,7 @@ if (isset($_GET['remove_from_cart'])) {
                     if (!empty($_SESSION['cart'])) {
                         $totalPrice = 0;
                         foreach ($_SESSION['cart'] as $item) {
-                            $stmt = $mysqli->prepare("SELECT Name, Price, `Condition`, Country FROM Products WHERE ID = ?");
+                            $stmt = $mysqli->prepare("SELECT Name, Price, `Condition`, Country, Production_year FROM Products WHERE ID = ?");
                             $stmt->bind_param("i", $item['ID']);
                             $stmt->execute();
                             $result = $stmt->get_result();
@@ -133,6 +130,7 @@ if (isset($_GET['remove_from_cart'])) {
                             echo '<td>' . number_format($productDetails['Price'], 2) . '$</td>';
                             $totalItemPrice = (isset($item['Availability']) ? $productDetails['Price'] * $item['Availability'] : 0);
                             echo '<td>' . number_format($totalItemPrice, 2) . '$</td>';
+                            echo '<td>' . $productDetails['Production_year'] . '</td>'; // Production Year
                             echo '<td><a href="Cart.php?remove_from_cart=' . $item['ID'] . '"><img src="Icons/Remove.jpg" alt="Remove" width="20" height="20" style="margin-left: 15px;"></a></td>';
                             echo '</tr>';
 
@@ -147,17 +145,20 @@ if (isset($_GET['remove_from_cart'])) {
                         <td></td>
                         <td>$' . number_format($totalPrice, 2) . '</td>
                         <td></td>
+                        <td></td>
                     </tr>';
                     echo '       
-                    <td colspan="5"></td>
-                    <td>
-                        <form action="confirm_purchase.php" method="post">
-                            <input type="submit" class="btn btn-success" value="Confirm Purchase">
-                        </form>
-                    </td>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td>
+                            <form action="confirm_purchase.php" method="post">
+                                <input type="submit" class="btn btn-success" value="Confirm Purchase">
+                            </form>
+                        </td>
+                    </tr>
                     ';
                     } else {
-                        echo '<tr><td colspan="6">No items in the cart</td></tr>';
+                        echo '<tr><td colspan="7">No items in the cart</td></tr>';
                     }
                     ?>
                 </tbody>
@@ -165,7 +166,8 @@ if (isset($_GET['remove_from_cart'])) {
         </div>
     </div>
 </div>
-<!-- ... (reszta kodu HTML) -->
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
