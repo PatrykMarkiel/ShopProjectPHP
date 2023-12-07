@@ -104,6 +104,8 @@
           ?>
         </select>
       </div>
+      
+<!-- Sidebar -->
       <div class="mb-3">
         <label for="category" class="form-label">Filter by vehicle category</label>
         <select class="form-select" name="category" id="category">
@@ -192,6 +194,17 @@
         }
         if (!empty($start_year) && !empty($end_year)) {
           $sql .= " AND Production_year BETWEEN $start_year AND $end_year";
+        }
+        if (!empty($sort_date) && ($sort_date === 'asc' || $sort_date === 'desc')) {
+          if (!empty($sort)) {
+            $sql .= ", ";
+          } else {
+            $sql .= " ORDER BY ";
+          }
+
+          $sql .= "Production_year $sort_date";
+        } elseif (!empty($sort)) {
+          $sql .= " ORDER BY Price $sort";
         }
 
         if (!empty($sort) && $sort_date === 'asc') {
