@@ -103,8 +103,7 @@
                         ?>
                         </span>
                     </div>
-
-                    <div class="mb-4">
+<div class="mb-4">
                     <div class="mb-4">
     <form action="Cart.php" method="GET">
         <input type="hidden" name="add_to_cart" value="<?php echo htmlspecialchars($productDetails['ID']); ?>">
@@ -161,6 +160,5 @@
             exit;
         }
     ?>
-    
 </body>
 </html>
