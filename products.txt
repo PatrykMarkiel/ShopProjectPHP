@@ -39,6 +39,6 @@ VALUES
     ('Abhay', 'An Indian Hindi-language psychological crime thriller web series', 'IFV', 2019, 'India', 4500000.00, 'New', 'Abhay.jpg', 'ZEE5', 1, CURDATE()),
     ('Makran', 'Iranian upgraded and upsized copy of the BTR-50 APC', 'IFV', 2020, 'Iran', 5000000.00, 'New', 'Makran.jpg', 'Research and Self-Sufficiency Jihad Organization', 1, CURDATE()),
     ('Type 89', 'Japanese infantry fighting vehicle', 'IFV', 1989, 'Japan', 2500000.00, 'New', 'Type89.jpg', 'Mitsubishi Heavy Industries', 1, CURDATE()),
-    ('Borsuk', 'Polish infantry fighting vehicle', 'IFV', 2025, 'Poland', 5000000.00, 'New', 'Borsuk.jpg', 'Huta Stalowa Wola', 1, CURDATE()),
+    ('Borsuk', 'Polish infantry fighting vehicle', 'IFV', 2025, 'Poland', 4000000.00, 'New', 'Borsuk.jpg', 'Huta Stalowa Wola', 1, CURDATE()),
     ('MLI-84', 'Romanian tracked infantry fighting vehicle', 'IFV', 1984, 'Romania', 3500000.00, 'Used', 'MLI84.jpg', 'Uzina Mechanică Bucureşti', 1, CURDATE()),
     ('LAV-25', 'Light armoured vehicle', 'LAV', 1983, 'USA', 3500000.00, 'Used', 'LAV25.jpg', 'General Dynamics', 3, CURDATE());
